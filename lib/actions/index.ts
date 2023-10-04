@@ -35,7 +35,20 @@ export async function scrapeAndStoreProduct(productUrl: string) {
         lowestPrice: getLowestPrice(updatedPriceHistory),
         highestPrice: getHighestPrice(updatedPriceHistory),
         averagePrice: getAveragePrice(updatedPriceHistory),
+        url: 'some url',
+        currency: 'some currency',
+        image: 'some image url',
+        title: 'some title',
+        currentPrice: 999,
+        originalPrice: 999,
+        discountRate: 999,
+        category: 'some category',
+        reviewsCount: 25,
+        stars:5,
+        isOutOfStock: false,
+        description: 'some description'
       }
+
     }
 
     const newProduct = await Product.findOneAndUpdate(
