@@ -3,11 +3,10 @@
 import { revalidatePath } from "next/cache";
 import Product from "../models/product.model";
 import { connectToDB } from "../mongoose";
-import { scrapedProduct } from "./scraper";
-import { getAveragePrice, getHighestPrice, getLowestPrice } from "./utils";
+import { scrapedProduct } from "../../lib/actions/scraper/index";
+import { getAveragePrice, getHighestPrice, getLowestPrice } from "../utils";
 import { User } from "@/types";
 import { generateEmailBody, sendEmail } from "../nodemailer";
-
 
 export async function scrapeAndStoreProduct(productUrl: string) {
   if(!productUrl) return;
@@ -19,9 +18,9 @@ export async function scrapeAndStoreProduct(productUrl: string) {
 
     if(!scrapProduct) return;
 
-    let product = scrapProduct;
+    let product = scrapedProduct;
 
-    const existingProduct = await Product.findOne({ url: scrapProduct.url });
+    const existingProduct = await Product.findOne({ url: scrapdProduct.url });
 
     if(existingProduct) {
       const updatedPriceHistory: any = [
@@ -29,25 +28,27 @@ export async function scrapeAndStoreProduct(productUrl: string) {
         { price: scrapProduct.currentPrice }
       ]
 
-      product = {
-        ...scrapedProduct,
-        priceHistory: updatedPriceHistory,
-        lowestPrice: getLowestPrice(updatedPriceHistory),
-        highestPrice: getHighestPrice(updatedPriceHistory),
-        averagePrice: getAveragePrice(updatedPriceHistory),
-        url: 'some url',
-        currency: 'some currency',
-        image: 'some image url',
-        title: 'some title',
-        currentPrice: 999,
-        originalPrice: 999,
-        discountRate: 999,
-        category: 'some category',
-        reviewsCount: 25,
-        stars:5,
-        isOutOfStock: false,
-        description: 'some description'
-      }
+      let product: any = {
+              url: scrapProduct.url,
+              currency: scrapProduct.currency,
+              image: scrapProduct.image,
+              title: scrapProduct.title,
+              currentPrice: scrapProduct.currentPrice,
+              originalPrice: scrapProduct.originalPrice,
+              discountRate: scrapProduct.discountRate,
+              category: scrapProduct.category,
+              reviewsCount: scrapProduct.reviewsCount,
+              rating: scrapProduct.stars,
+              description: scrapProduct.description,
+              priceHistory: [
+                {
+                  price: scrapProduct.currentPrice,
+                },
+              ],
+              lowestPrice: scrapProduct.currentPrice,
+              highestPrice: scrapProduct.currentPrice,
+              averagePrice: scrapProduct.currentPrice,
+            };
 
     }
 
