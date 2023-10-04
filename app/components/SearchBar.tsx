@@ -1,5 +1,5 @@
 "use client"
-import { scrapAndStoreProduct } from '@/lib/actions';
+import { scrapeAndStoreProduct } from '@/lib/actions';
 import Image from 'next/image'
 import { FormEvent,useState } from 'react'
 
@@ -46,7 +46,7 @@ const SearchBar = () => {
           setIsLoading(true);
 
           //Scrapping the product page
-          const product = await scrapAndStoreProduct(searchTerm);
+          const product = await scrapeAndStoreProduct(searchTerm);
        }
         catch(error){
           console.log(error);
